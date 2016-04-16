@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="performance_rpt" language="groovy" pageWidth="1512" pageHeight="595" orientation="Landscape" columnWidth="1472" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="79ba9d20-d479-4185-ac55-61ceb102e838">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<parameter name="pYr" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[2015]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pMon" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[9]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select a.team, a.name, a.source, a.plan_count, a.sum_loanamt, a.loanamt_gt_0, b.head_count,
+a.sum_loanamt / a.loanamt_gt_0 as avg_loan,
+a.loanamt_gt_0 / a.plan_count * 100 as loan_pc
+from
+(select s.team as team, s.name, c.source,
+count(p.id) as plan_count, sum(p.loanAmt) as sum_loanamt,
+sum(case when p.loanAmt > 0 then 1 else 0 end) as loanamt_gt_0
+from tb_plan p, tb_cust c, tb_sales s
+where p.cust_id = c.id
+and p.sales_id = s.id
+and MONTH(p.createdDT) = $P{pMon}
+and YEAR(p.createdDT) = $P{pYr}
+group by s.team, s.name, c.source
+order by s.team
+) as a
+inner join
+(
+select s.team as team, count(s.name) as head_count from tb_sales s
+group by s.team
+) as b
+on a.team = b.team]]>
+	</queryString>
+	<field name="team" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="source" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_count" class="java.lang.Long"/>
+	<field name="sum_loanamt" class="java.lang.Double"/>
+	<field name="loanamt_gt_0" class="java.math.BigDecimal"/>
+	<field name="head_count" class="java.lang.Long"/>
+	<field name="avg_loan" class="java.lang.Double"/>
+	<field name="loan_pc" class="java.math.BigDecimal"/>
+	<variable name="grpName_sum" class="java.lang.Integer" resetType="Group" resetGroup="grpName" calculation="Sum">
+		<variableExpression><![CDATA[$F{plan_count}]]></variableExpression>
+	</variable>
+	<group name="grpTeam">
+		<groupExpression><![CDATA[$F{team}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement x="100" y="10" width="100" height="20" uuid="9fd97728-f7de-40d1-9b55-29fef0d9d192"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25" lineStyle="Solid"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textFieldExpression><![CDATA[$F{team}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="10" width="100" height="20" uuid="53d4ce6a-1b84-45f4-86cc-0800f6975269"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<text><![CDATA[Team]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="34"/>
+		</groupFooter>
+	</group>
+	<group name="grpName">
+		<groupExpression><![CDATA[$F{team} + $F{name}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<staticText>
+					<reportElement x="490" y="30" width="100" height="20" uuid="b6af1fa8-05cd-49e5-98a5-1d01be84af35"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<text><![CDATA[成功入金率 %]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="390" y="30" width="100" height="20" uuid="5c7d1ed9-8d29-4fe6-b8b3-83fdd985fc38"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<text><![CDATA[成功入金Case]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="690" y="30" width="70" height="20" uuid="8c5f5c2e-2a64-44f8-91fd-759c64bcd8f3"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<text><![CDATA[平均入金
+ ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="320" y="30" width="70" height="20" uuid="80192bda-9ee5-4865-a1e5-681db15e11e5"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<text><![CDATA[成功會面率]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="30" width="100" height="20" uuid="daa25bbd-6389-44a1-8fb4-e3de834494a1"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<text><![CDATA[Name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="100" y="30" width="100" height="20" uuid="72861ef8-f5aa-43d2-85b2-164bf07f2b10"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<text><![CDATA[場]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="200" y="30" width="50" height="20" uuid="4dcd232a-7930-4fc1-9abd-6a655ea89de8"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<text><![CDATA[單]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="590" y="30" width="100" height="20" uuid="4628709c-a613-49d5-99bc-d4db6e814d79"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<text><![CDATA[入金金額]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="250" y="30" width="70" height="20" uuid="3df6c687-6d82-40a8-938c-f0c92c606427"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<text><![CDATA[成功會面]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="30">
+				<staticText>
+					<reportElement x="0" y="0" width="100" height="20" uuid="94fe6a4a-c315-45ee-9d56-ea3f1a88e0ae"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="200" y="0" width="50" height="20" uuid="2d421aee-5088-4b29-8787-b2d628442787"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25" lineStyle="Solid"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textFieldExpression><![CDATA[$V{grpName_sum}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="41" width="200" height="38" uuid="d852858a-6b88-45ba-86a9-fc115371f8c2"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Performance Report :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="200" y="41" width="100" height="38" uuid="f796ed9f-911f-4ed2-88d9-386862828443"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pYr} + "-" + $P{pMon}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="27" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="6b950f73-b482-4c7f-b062-4c7037c268c0"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="50" height="20" uuid="47d0e52c-3842-4426-b503-877a3756eef2"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{plan_count}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="590" y="0" width="100" height="20" uuid="b9ef5a77-15c1-41f8-8886-e3798885838b"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{sum_loanamt}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="0" width="100" height="20" uuid="d978b6ce-7ff2-4487-894e-dac397472bf0"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{loanamt_gt_0}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="690" y="0" width="70" height="20" uuid="59831d40-119f-4ed5-af89-238d5a177604"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{avg_loan}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="250" y="0" width="70" height="20" uuid="bd99402e-cde6-4a0d-8f80-c080495ba81a"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="0" width="70" height="20" uuid="eab4b240-7378-4080-bd37-2fcbfdbf66c9"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="490" y="0" width="100" height="20" uuid="605213a3-ca06-491b-b7d5-729ec62d7516"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{loan_pc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20" uuid="28a21090-d09e-4612-8b22-6062a7109323"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{source}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="32" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="174" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="74" splitType="Stretch"/>
+	</summary>
+</jasperReport>

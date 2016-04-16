@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd"> -->
+
+<!--
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "classpath://hk/pnp/dtd/hibernate-configuration-3.0.dtd"
+		>
+-->
+
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "classpath://hibernate-configuration-3.0.dtd"
+		>
+
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		
+		<!-- <property name="hibernate.connection.url">
+			jdbc:mysql://localhost:3306/mydb
+		</property>
+		 -->
+		
+		<property name="hibernate.connection.url">
+			jdbc:mysql://localhost:3306/pnpdb?characterEncoding=UTF-8
+		</property> 
+		
+		<!--  
+		<property name="connection.autoReconnect">true</property> 
+		--> 
+		
+		 
+		<property name="connection.useUnicode">true</property> 
+		 
+		
+		<property name="hibernate.connection.username">pnpAdmin</property>
+		
+		<property name="hibernate.connection.password">nopass</property>
+		 
+		<property name="hibernate.connection.pool_size">5</property>
+		
+		
+		<property name="hibernate.show_sql">true</property>
+		
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		
+		
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		
+		<!--  
+		<property name="hibernate.hbm2ddl.auto">create</property>
+		 -->
+		 
+		 <property name="hibernate.connection.provider_class">
+  			org.hibernate.connection.C3P0ConnectionProvider
+		</property>
+		 
+		 <property name="hibernate.c3p0.min_size">5</property>
+		 <property name="hibernate.c3p0.max_size">20</property>
+	     <property name="hibernate.c3p0.timeout">1800</property>
+	     <property name="hibernate.c3p0.max_statements">50</property>
+		 <property name="hibernate.c3p0.preferredTestQuery">SELECT 1</property>
+		 <property name="hibernate.c3p0.testConnectionOnCheckout">true</property>	
+		 
+		<mapping class="hk.pnp.persistence.User" />
+		<mapping class="hk.pnp.persistence.Role" />
+		
+		<mapping class="hk.pnp.persistence.Cust" />
+		<mapping class="hk.pnp.persistence.Sales" />
+		<!-- 
+		<mapping class="hk.pnp.persistence.Case" />
+		 -->
+		<mapping class="hk.pnp.persistence.Plan" />
+		
+		<mapping class="hk.pnp.persistence.Event" />
+		
+		<mapping class="hk.pnp.persistence.Lov" />
+		
+		<mapping class="hk.pnp.persistence.FinComp" />
+		
+		<mapping class="hk.pnp.persistence.Activity" />
+		
+	</session-factory>
+</hibernate-configuration> 

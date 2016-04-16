@@ -1,0 +1,25 @@
+2016-04-11
+
+    carmen
+    
+        交單 > Status > bank(s)
+        
+            child grid > show individual status
+        
+        alarm
+        
+            customer, bank , daily at 12:00 , 18:00
+            
+            only certain staff
+            
+        by role , access record
+        
+    me
+    
+        configure jetty
+        
+        configure ssl
+        
+        config git
+        
+        

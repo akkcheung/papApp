@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+
+	<!-- <constant name="struts.enable.DynamicMethodInvocation" value="false" 
+		/> -->
+
+<!-- 
+	<constant name="struts.devMode" value="true" />
+ -->
+ 
+ 	<!-- Production -->
+ 	<constant name="struts.devMode" value="false" />
+ 
+ 	<!-- <constant name="struts.action.excludePattern" value="(?!/(Hello|AbcOn|Person|School).*).*\.do"/> -->
+
+	<constant name="struts.action.extension" value="do" />
+
+
+	<package name="default" namespace="/" extends="struts-default">
+
+		<interceptors>
+                <interceptor class="hk.pnp.interceptor.LoginInterceptor" name="loginInterceptor">
+                </interceptor>
+                
+                <interceptor-stack name="loginStack">
+                        <interceptor-ref name="loginInterceptor" />
+                        <interceptor-ref name="defaultStack" />
+                </interceptor-stack>
+        </interceptors>	
+        
+        <default-interceptor-ref name="loginStack"/>
+        
+        <global-results>
+   			<result name="login">/login.jsp</result>
+   			<result name="home">/home.jsp</result>
+   		</global-results>
+
+		<!-- 
+		<action name="home">
+			<result>index.jsp</result>
+		</action>
+
+ 		-->
+
+ 		<!-- login action -->
+        <action name="loginUser" class="hk.pnp.action.LoginAction" method="login">
+        		<interceptor-ref name="defaultStack" />
+                <result name="success" type="redirect">homeAction.do</result>
+                <!-- <result name="login">login.jsp</result>
+         		-->
+         </action>
+        
+        <!-- home link action -->
+        <action name="homeAction" class="hk.pnp.action.LoginAction" method="home">
+                <!-- <interceptor-ref name="loginStack" />
+                <result name="login">login.jsp</result>
+                -->
+                 <result name="success">callList.jsp</result>
+        </action>
+        
+        <!-- logout action -->
+        <action name="logOut" class="hk.pnp.action.LoginAction" method="logOut">
+                <result>login.jsp</result>
+        </action>
+    
+	</package>
+
+	<package name="json" namespace="/json" extends="default, json-default">
+
+		<default-interceptor-ref name="loginStack"/>
+
+		<action name="getCust" class="hk.pnp.action.CustAction" method="getCust">
+			<!-- <result name="success" type="json"> <param name="root">userJSONList</param> 
+				</result> -->
+		</action>
+
+		<action name="getCust2" class="hk.pnp.action.CustAction" method="getCust2">
+		</action>
+
+		<action name="addCust" class="hk.pnp.action.CustAction" method="add">
+		</action>
+
+		<action name="editCust" class="hk.pnp.action.CustAction"
+			method="edit">
+		</action>
+
+		<action name="removeCust" class="hk.pnp.action.CustAction"
+			method="remove">
+		</action>
+
+		<action name="searchCust" class="hk.pnp.action.CustAction"
+			method="getCustomersByName">
+		</action>
+
+		<action name="getPlan" class="hk.pnp.action.PlanAction" method="getPlan">
+		</action>
+		
+		<action name="newPlan" class="hk.pnp.action.PlanAction" method="newPlan">
+		</action>
+		
+		<action name="addPlan" class="hk.pnp.action.PlanAction" method="add">
+		</action>
+
+		<action name="editPlan" class="hk.pnp.action.PlanAction"
+			method="edit">
+		</action>
+
+		<action name="removePlan" class="hk.pnp.action.PlanAction"
+			method="remove">
+		</action>
+		
+		<!-- 
+		<action name="getEvents" class="hk.pnp.action.EventAction"
+			method="getEvents">
+		</action>
+
+		<action name="newEvent" class="hk.pnp.action.EventAction"
+			method="add">
+		</action>
+
+		<action name="editEvent" class="hk.pnp.action.EventAction"
+			method="edit">
+		</action>
+		
+		<action name="getOsEvents" class="hk.pnp.action.EventAction"
+			method="getOsEvents">
+		</action>
+		 -->
+		
+		<action name="getSales" class="hk.pnp.action.SalesAction"
+			method="getSales">
+		</action>
+		
+		<action name="getSalesLov" class="hk.pnp.action.SalesAction"
+			method="getLov">
+		</action>
+		
+		<action name="searchSales" class="hk.pnp.action.SalesAction"
+			method="searchByName">
+		</action>
+		
+		<action name="addSales" class="hk.pnp.action.SalesAction" method="add">
+		</action>
+
+		<action name="editSales" class="hk.pnp.action.SalesAction"
+			method="edit">
+		</action>
+		
+		<action name="removeSales" class="hk.pnp.action.SalesAction"
+			method="remove">
+		</action>
+		
+		<action name="getFinComp" class="hk.pnp.action.FinCompAction"
+			method="getAll">
+		</action>
+		
+		<action name="getPageFinComp" class="hk.pnp.action.FinCompAction"
+			method="getPage">
+		</action>
+		
+		<action name="addFinComp" class="hk.pnp.action.FinCompAction"
+			method="add">
+		</action>
+		
+		<action name="editFinComp" class="hk.pnp.action.FinCompAction"
+			method="edit">
+		</action>
+		
+		<action name="removeFinComp" class="hk.pnp.action.FinCompAction"
+			method="remove">
+		</action>
+		
+		<action name="getFinCompByPlan" class="hk.pnp.action.FinCompAction"
+			method="getByPlanId">
+		</action>
+		
+		<action name="getActivitiesByPlan" class="hk.pnp.action.ActivityAction"
+			method="getActivities">
+		</action>
+		
+		<action name="addActivity" class="hk.pnp.action.ActivityAction"
+			method="add">
+		</action>
+		
+		<action name="editActivity" class="hk.pnp.action.ActivityAction"
+			method="edit">
+		</action>
+		
+		<action name="removeActivity" class="hk.pnp.action.ActivityAction"
+			method="remove">
+		</action>
+	</package>
+
+	<package name="jasper" namespace="/jasper" extends="jasperreports-default">
+		<action name="genSalesDailyWsRpt" class="hk.pnp.action.JasperAction"
+		 method="genSalesDailyWsRpt">
+			<result name="success" type="jasper">
+				<!-- 	<param name="dataSource">myList</param>
+			 	-->
+			 	<!-- <param name="location">/jasper/sales_daily_worksheet.jasper</param> -->
+				<param name="location">/jasper/sales_daily_worksheet_team.jasper</param>
+					
+			 	<param name="connection">conn</param> 
+				<param name="reportParameters">reportParameter</param>
+				<param name="format">XLS</param>
+			</result>
+		</action>
+		
+		<action name="genPerformanceRpt" class="hk.pnp.action.JasperAction"
+		method="genPerformanceRpt">
+			<result name="success" type="jasper">
+				<param name="location">/jasper/performance_rpt.jasper</param>
+			 	<param name="connection">conn</param> 
+				<param name="reportParameters">reportParameter</param>
+				<param name="format">XLS</param>
+			</result>
+		</action>
+		
+		<action name="genPerformanceTeamRpt" class="hk.pnp.action.JasperAction"
+		method="genPerformanceRpt">
+			<result name="success" type="jasper">
+				<param name="location">/jasper/performance_team_rpt.jasper</param>
+			 	<param name="connection">conn</param> 
+				<param name="reportParameters">reportParameter</param>
+				<param name="format">XLS</param>
+			</result>
+		</action>
+	</package>
+
+</struts>
